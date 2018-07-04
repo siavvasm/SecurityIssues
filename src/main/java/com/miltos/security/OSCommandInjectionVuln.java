@@ -74,7 +74,7 @@ public class OSCommandInjectionVuln {
     		System.out.println("Command: " + command);
     		
     		// Create the ProcessBuilder object
-    		builder = new ProcessBuilder("cmd.exe", "/c", command);
+    		builder = new ProcessBuilder("/bin/bash","-c", command);
         	builder.redirectErrorStream(true);
         	
 			// Execute the command 

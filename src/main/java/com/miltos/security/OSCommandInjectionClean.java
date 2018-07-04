@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.codecs.UnixCodec;
 import org.owasp.esapi.codecs.WindowsCodec;
 
 /**
@@ -61,7 +62,7 @@ public class OSCommandInjectionClean {
 
 	final static Logger logger = Logger.getLogger(OSCommandInjectionClean.class);
 	final static String DATA_PATH = new File("./input_data.txt").getAbsolutePath();
-	final static String APP_PATH = new File("./test.jar").getAbsolutePath();
+	final static String APP_PATH = new File("test.jar").getAbsolutePath();
 
 	public static void main(String[] args) {
 		
@@ -132,17 +133,17 @@ public class OSCommandInjectionClean {
 	    		// C. Encoding: Create and encode the basic command
 	    		String command = "java -jar %s";
 	    		command = String.format(command, APP_PATH);
-	    		command =  ESAPI.encoder().encodeForOS(new WindowsCodec(), command);
+	    		//command =  ESAPI.encoder().encodeForOS(new UnixCodec(), command);
 	    		
 	    		// C. Encoding: Encode the parameter that will be provided as input to the command
-	    		parameter = ESAPI.encoder().encodeForOS(new WindowsCodec(), parameter);
+	    		parameter = ESAPI.encoder().encodeForOS(new UnixCodec(), parameter);
 	    		
 	    		/*
 	    		 * Execute the command
 	    		 */
 	    		
 	    		// D. Parameterization: Provide command and data separately to the ProcessBuilder
-	    		builder = new ProcessBuilder("cmd.exe", "/c", command, "", parameter);
+	    		builder = new ProcessBuilder("/bin/bash","-c", command + " " + parameter);
 	        	builder.redirectErrorStream(true);
 	        	
 	    		try {
